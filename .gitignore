@@ -8,6 +8,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+multilingual-e5-large/
+data/
 build/
 develop-eggs/
 dist/
