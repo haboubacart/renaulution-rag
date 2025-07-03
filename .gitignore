@@ -10,6 +10,7 @@ __pycache__/
 .Python
 multilingual-e5-large/
 faiss_vectorestore/
+vectorstore/
 data/
 build/
 develop-eggs/
