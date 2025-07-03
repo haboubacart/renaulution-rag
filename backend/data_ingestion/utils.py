@@ -1,6 +1,8 @@
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import re
+import uuid
+
 
 
 def clean_raw_text(text: str) -> str:
@@ -64,7 +66,6 @@ def create_chunks(documents : Document, filename : str, chunk_size : int, chunk_
         chunk_overlap=chunk_overlap
     )
     all_chunks = []
-    chunk_count = 0
     for doc in documents:
         if activate_cleaning : 
             cleaned_text_page = join_short_lines(clean_raw_text(doc.page_content))
@@ -76,8 +77,7 @@ def create_chunks(documents : Document, filename : str, chunk_size : int, chunk_
                 page_content = chunk,
                 metadata={
                     "source": filename,
-                    "chunk_id": chunk_count
+                    "id": str(uuid.uuid4())
                 }
             ))
-            chunk_count += 1
     return all_chunks

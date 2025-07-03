@@ -1,7 +1,5 @@
-from utils import clean_raw_text, join_short_lines, create_chunks
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from utils import create_chunks
 from langchain.document_loaders import UnstructuredPDFLoader
-from langchain.schema import Document
 import os  
 
 
