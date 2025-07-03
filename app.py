@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify
 from langchain_core.documents import Document
 import time
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder="frontend/templates", static_folder="frontend/static")
 
 # Dummy function simulating a retriever or LLM
 # Replace this with your LangChain retriever/agent logic
