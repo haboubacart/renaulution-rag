@@ -60,7 +60,7 @@ def join_short_lines(text: str, min_len: int = 60) -> str:
 
     return "\n".join(result)
 
-def create_chunks(documents : Document, filename : str, chunk_size : int, chunk_overlap : int, activate_cleaning = True) -> list :
+def create_chunks(documents : Document, source_name : str, chunk_size : int, chunk_overlap : int, activate_cleaning = True) -> list :
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap
@@ -76,7 +76,7 @@ def create_chunks(documents : Document, filename : str, chunk_size : int, chunk_
             all_chunks.append(Document(
                 page_content = chunk,
                 metadata={
-                    "source": filename,
+                    "source": source_name,
                     "id": str(uuid.uuid4())
                 }
             ))

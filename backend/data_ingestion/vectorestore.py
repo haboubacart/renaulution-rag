@@ -5,8 +5,6 @@ from logger import get_logger
 logger = get_logger()
 
 
-
-
 def create_vectorstore(embedding_model, index_path):
     try:
         dim = len(embedding_model.embed_query("test"))
@@ -29,7 +27,7 @@ def create_vectorstore(embedding_model, index_path):
         logger.info("Index vide (cosinus) créé avec succès.")
         return vectorstore
     except Exception as e:
-        logger.error(f"❌ Erreur lors de la création de l’index vide: {e}", exc_info=True)
+        logger.error(f"Erreur lors de la création de l’index vide: {e}", exc_info=True)
         return None
 
 
@@ -50,4 +48,4 @@ def index_documents(chunks, embedding_model, index_storing_path, batch_size=64):
         logger.info("Indexation terminée avec succès.")
 
     except Exception as e:
-        logger.error(f"❌ Erreur lors de l’indexation : {e}", exc_info=True)
+        logger.error(f"Erreur lors de l’indexation : {e}", exc_info=True)
