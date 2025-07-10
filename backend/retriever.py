@@ -35,11 +35,11 @@ def load_documents(pickle_path: str) -> list[Document]:
         return pickle.load(f)
 
 # Créer le retriever sémantique
-def create_semantic_retriever(vectorstore: FAISS, k: int = 7):
+def create_semantic_retriever(vectorstore: FAISS, k: int = 4):
     return vectorstore.as_retriever(search_kwargs={"k": k})
 
 # Créer le retriever lexical BM25
-def create_lexical_retriever(documents: list[Document], k: int = 3):
+def create_lexical_retriever(documents: list[Document], k: int = 1):
     bm25 = BM25Retriever.from_documents(documents)
     bm25.k = k
     return bm25

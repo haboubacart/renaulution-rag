@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
     temperature=0.7
 )"""
 
-#Initialiser le LLM (gpt-4o par défaut)
+# Initialiser le LLM (gpt-4o par défaut)
 def load_llm():
     return ChatOpenAI(
         api_key=os.getenv("OPENAI_API_KEY"),
@@ -23,11 +23,13 @@ def load_llm():
         temperature=0.1
     )
 
-# 🧠 Prompt personnalisé pour le RAG
+# Prompt personnalisé pour le RAG
 def build_rag_prompt():
     prompt_template = """
+    Tu es un expert sur l'entreprise Renault.
+    Tu dois repondre à la question de l'utilisateur à partir du contexte fournir ci-dessous.
     Utilise uniquement les éléments de contexte suivants pour répondre à la question.
-    Si vous ne connaissez pas la réponse, dites simplement que vous ne savez pas.
+    Si tu ne retrouve pas la réponse, reponds simplement que tu ne connais pas la réponse. Soit simple, professionnel et chalereux.
 
     Contexte: {context}
 
@@ -37,7 +39,7 @@ def build_rag_prompt():
     """
     return PromptTemplate(template=prompt_template, input_variables=["context", "question"])
 
-# 🔍 Crée une chaîne RAG basée sur un retriever
+#Crée une chaîne RAG basée sur un retriever
 def create_rag_chain(llm, retriever):
     prompt = build_rag_prompt()
     return RetrievalQA.from_chain_type(

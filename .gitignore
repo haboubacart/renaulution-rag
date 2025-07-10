@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 multilingual-e5-large/
+bge-m3/
 faiss_vectorestore/
 vectorstore/
 data/
