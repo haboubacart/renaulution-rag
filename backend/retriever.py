@@ -57,8 +57,8 @@ def load_hybrid_retriever(
     pickle_path: str,
     model_path: str,
     k_semantic: int = 7,
-    k_lexical: int = 2,
-    weights: list = [0.8, 0.2]
+    k_lexical: int = 3,
+    weights: list = [0.7, 0.3]
 ):
     embedding_model = load_embedding_model(model_path)
     vectorstore = load_faiss_vectorstore(index_path, embedding_model)
@@ -68,4 +68,5 @@ def load_hybrid_retriever(
     lexical_retriever = create_lexical_retriever(documents, k=k_lexical)
 
     return create_hybrid_retriever(semantic_retriever, lexical_retriever, weights)
+
 

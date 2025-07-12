@@ -50,10 +50,21 @@ def create_rag_chain(llm, retriever):
         return_source_documents=True
     )
 
-# 🛠️ Fonction d'accès pour le RAG tool
+"""# 🛠️ Fonction d'accès pour le RAG tool
 def retriever_relevant_docs_factory(rag_chain):
     def _retriever(query: str):
         result = rag_chain.invoke({"query": query})
+        return result["result"]
+    return _retriever"""
+
+def retriever_relevant_docs_factory(rag_chain):
+    def _retriever(query: str):
+        result = rag_chain.invoke({"query": query})
+        context = result["source_documents"]  # les chunks retrouvés
+        for i, doc in enumerate(context):
+            print(f"\n--- Chunk #{i+1} ---")
+            print(doc.page_content)
+            print("🔍 Source:", doc.metadata.get("source", "inconnu"))
         return result["result"]
     return _retriever
 

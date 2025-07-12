@@ -9,6 +9,7 @@ import uuid
 import re
 import os  
 
+
 logger = get_logger()
 os.environ["HF_HUB_DISABLE_SYMLINKS"] = "1"
 
@@ -171,7 +172,7 @@ def extract_and_split_pdf_v2(file_path: str, output_md_path: str, chunk_size: in
                         "id": str(uuid.uuid4())
                     }
                 ))
-        return all_pdf_chunks
+        return all_chunks
 
     except Exception as e:
         logger.error(f"Erreur lors du traitement du PDF '{filename}': {e}", exc_info=True)

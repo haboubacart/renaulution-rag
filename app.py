@@ -10,9 +10,9 @@ app = Flask(__name__,template_folder="frontend/templates", static_folder="fronte
 
 
 retriever = load_hybrid_retriever(
-        index_path="vectorstore/faiss_vectorestore",
-        pickle_path="vectorstore/documents.pkl",
-        model_path="multilingual-e5-large"
+        index_path="vectorstore/faiss_vectorestore_v2",
+        pickle_path="vectorstore/documents_v2.pkl",
+        model_path="./bge-m3"
     )
 
 agent = build_agent(retriever)
