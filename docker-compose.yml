@@ -1,0 +1,16 @@
+services:
+  renaulution-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: renaulution-agent
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./bge-m3:/app/bge-m3            
+      - ./vectorstore:/app/vectorstore
+      - ./frontend:/app/frontend
+      - ./backend:/app/backend
+    env_file:
+      - .env
+    command: ["python", "app.py"]

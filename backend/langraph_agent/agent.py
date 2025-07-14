@@ -41,8 +41,6 @@ def router_node_factory(llm):
     return router_node
 
 
-
-
 def response_node(state: GraphState) -> GraphState:
     if state.get("graph_base64"):
         final_response = f"{state['graph_base64']}"
@@ -56,39 +54,37 @@ def response_node(state: GraphState) -> GraphState:
     return {"final_response": final_response}
 
 
-def build_langgraph_rag(retriever, llm):
+def build_langgraph_agent(retriever, llm):
     retriever_obj, stuff_chain = build_rag_chain(retriever, llm)
     rag_node = rag_node_factory(retriever_obj, stuff_chain)
     router_node = router_node_factory(llm)
 
     graph = StateGraph(GraphState)
 
+    graph.set_entry_point("router")
+    graph.add_edge("router", "rag_node")
+
     graph.add_node("router", router_node)
-    graph.add_node("rag_only", rag_node)
-    graph.add_node("finance_only", finance_node)
-    graph.add_node("graph_flow_sales", rag_node)
-    graph.add_node("graph_flow_finance", rag_node)
-    graph.add_node("plot_node", plot_node)
-    graph.add_node("response", response_node)
+    graph.add_node("rag_node", rag_node)
+    graph.add_node("finance_node", finance_node)
+    graph.add_node("graph_node", plot_node)
+    graph.add_node("response_node", response_node)
 
     graph.add_conditional_edges(
-        "router",
+        "rag_node",
         lambda state: state["route"],
         {
-            "rag_only": "rag_only",
-            "finance_only": "finance_only",
-            "graph_flow_sales": "graph_flow_sales",
-            "graph_flow_finance": "graph_flow_finance"
+            "rag_only": "response_node",
+            "finance_only": "finance_node",
+            "graph_flow_sales": "graph_node",
+            "graph_flow_finance": "graph_node"
         }
     )
-    graph.add_edge("plot_node", "response")
-    graph.add_edge("rag_only", "response")
-    graph.add_edge("graph_flow_sales", "plot_node")
-    graph.add_edge("graph_flow_finance", "plot_node")
-    graph.add_edge("rag_only", "response")
-    graph.add_edge("finance_only", "response")
+   
+    graph.add_edge("graph_node", "response_node")
+    graph.add_edge("finance_node", "response_node")
 
-    graph.set_entry_point("router")
-    graph.set_finish_point("response")
+    
+    graph.set_finish_point("response_node")
 
     return graph.compile()

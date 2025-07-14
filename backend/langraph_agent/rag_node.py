@@ -1,17 +1,21 @@
-from typing import Optional, TypedDict
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.chains import LLMChain
 from langchain.chains import StuffDocumentsChain
-from langchain_core.messages import HumanMessage
 from utils import GraphState
 
 
 def build_rag_chain(retriever, llm):
     prompt = PromptTemplate(
         template="""
-        Tu es un expert fiable et professionnel sur l'entreprise Renault.
+        Tu es un expert sur l'entreprise Renault.
+        Tu dois repondre à la question de l'utilisateur à partir du contexte fournir ci-dessous.
+        Utilise uniquement les éléments de contexte suivants pour répondre à la question.
+        Si tu ne retrouve pas la réponse, reponds simplement que tu ne connais pas la réponse. Soit simple, professionnel et chalereux.
+        \n
+        Instructions à respecter : \n
         {instruction}
+        \n
         ---
         Contexte: {context}
         Question: {question}
@@ -40,7 +44,7 @@ def rag_node_factory(retriever, stuff_chain):
         if route == "graph_flow_sales":
             instruction = (
                 "Extrait uniquement les chiffres de vente par année (ou par période) depuis 2020. "
-                "Formate les résultats comme en json : {'yyyy' : 'vente1', 'yyyy2' : 'vente2'} etc..."
+                "Formate les résultats en json, par exemple : {'yyyy' : 'vente1', 'yyyy2' : 'vente2'} etc..."
                 "repond juste avec les données sans rien ajouter, ni de balise de code, juste le json"
             )
         elif route == "graph_flow_finance":
