@@ -76,9 +76,9 @@ def build_langgraph_agent(retriever, llm):
         lambda state: state["route"],
         {
             "rag_only": "response_node",
-            "finance_only": "finance_node",
             "graph_flow_internal": "graph_node",
-            "graph_flow_stock": "finance_node"
+            "graph_flow_stock": "finance_node",
+            "finance_only": "finance_node"
         }
     )
 

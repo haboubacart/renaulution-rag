@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+
 from backend.langraph_agent.retriever import load_hybrid_retriever
 from backend.langraph_agent.agent import build_langgraph_agent
 import os
@@ -18,8 +20,8 @@ app = Flask(__name__, template_folder="frontend/templates", static_folder="front
 print("Strating......")
 # Chargement du retriever local + modèle HF
 retriever = load_hybrid_retriever(
-    index_path="./vectorstore/faiss_vectorestore_v2",
-    pickle_path="./vectorstore/documents_v2.pkl",
+    index_path="./vectorstore/faiss_vectorestore",
+    pickle_path="./vectorstore/documents.pkl",
     model_path="./bge-m3"
 )
 
@@ -29,6 +31,11 @@ llm = ChatOpenAI(
     model="gpt-4o",
     temperature=0.1
 )
+
+"""llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",  
+    temperature=0.1
+)"""
 
 # Agent LangGraph
 agent = build_langgraph_agent(retriever, llm)
