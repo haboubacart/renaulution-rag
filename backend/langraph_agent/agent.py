@@ -1,9 +1,10 @@
-from rag_node import build_rag_chain, rag_node_factory
-from utils import GraphState
+from backend.langraph_agent.rag_node import build_rag_chain, rag_node_factory
+from backend.langraph_agent.finance_node import finance_node
+from backend.langraph_agent.plot_node import plot_node
+from backend.langraph_agent.utils import GraphState
 from langgraph.graph import StateGraph
 from langchain_core.messages import HumanMessage
-from finance_node import finance_node
-from plot_node import plot_node
+
 
 
 def router_node_factory(llm):
@@ -43,7 +44,7 @@ def router_node_factory(llm):
 
 def response_node(state: GraphState) -> GraphState:
     if state.get("graph_base64"):
-        final_response = f"{state['graph_base64']}"
+        final_response = f"Here is the genarated graph"
     elif state.get("stock_data"):
         final_response = f"Données boursières extraites :\n{state['stock_data']}"
     elif state.get("rag_result"):

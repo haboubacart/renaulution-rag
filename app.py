@@ -1,30 +1,37 @@
-# app.py
 from flask import Flask, render_template, request, jsonify
 from langchain_openai import ChatOpenAI
 from backend.langraph_agent.retriever import load_hybrid_retriever
 from backend.langraph_agent.agent import build_langgraph_agent
 import os
-import time
+import sys
+import warnings
 
-app = Flask(__name__,template_folder="frontend/templates", static_folder="frontend/static")
+# Supprimer les warnings inutiles
+warnings.filterwarnings("ignore")
 
+# S'assurer que les imports relatifs fonctionnent
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+app = Flask(__name__, template_folder="frontend/templates", static_folder="frontend/static")
+
+
+print("Strating......")
+# Chargement du retriever local + modèle HF
 retriever = load_hybrid_retriever(
-        index_path="./vectorstore/faiss_vectorestore_v2",
-        pickle_path="./vectorstore/documents_v2.pkl",
-        model_path="./bge-m3"
-    )
+    index_path="./vectorstore/faiss_vectorestore_v2",
+    pickle_path="./vectorstore/documents_v2.pkl",
+    model_path="./bge-m3"
+)
+
+# LLM
 llm = ChatOpenAI(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        model="gpt-4o",
-        temperature=0.1)
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="gpt-4o",
+    temperature=0.1
+)
 
-
+# Agent LangGraph
 agent = build_langgraph_agent(retriever, llm)
-
-
-def get_chat_response(user_message):
-    result = agent.invoke({"question": user_message})
-    return result['final_response']
 
 @app.route("/")
 def index():
@@ -33,8 +40,16 @@ def index():
 @app.route("/ask", methods=["POST"])
 def ask():
     user_message = request.json.get("message")
-    response = get_chat_response(user_message)
-    return jsonify({"response": response})
+    result = agent.invoke({"question": user_message})
+
+    final_response = result.get("final_response", "")
+    image = result.get("graph_base64")  
+    print(result.get("rag_result"))
+    return jsonify({
+        "response": final_response,
+        "image": image  # null si pas d’image
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    

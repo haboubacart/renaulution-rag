@@ -2,7 +2,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.chains import LLMChain
 from langchain.chains import StuffDocumentsChain
-from utils import GraphState
+from backend.langraph_agent.utils import GraphState
 
 
 def build_rag_chain(retriever, llm):
@@ -60,6 +60,7 @@ def rag_node_factory(retriever, stuff_chain):
         else:
             instruction = (
                 "Fournis une réponse directe et claire à la question en utilisant uniquement le contexte fourni."
+                "Creuse dans le contexte et extrait le maxuimum de passage relatif à la faition et construis une reponse"
             )
 
         docs = retriever.get_relevant_documents(query)
@@ -68,7 +69,7 @@ def rag_node_factory(retriever, stuff_chain):
             question=query,
             instruction=instruction
         )
-
+        #print(docs)
         state.update({"rag_result": result, "route": route})
         return state
 

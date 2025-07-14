@@ -13,17 +13,19 @@
       height: 100vh;
       margin: 0;
     }
+
     #chat-container {
-    background: white;
-    width: 90%;
-    max-width: 1200px;
-    height: 600px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+      background: white;
+      width: 90%;
+      max-width: 1200px;
+      height: 600px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
     #chat-header {
       background-color: #0d6efd;
       color: white;
@@ -34,13 +36,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
       gap: 10px;
     }
+
     #chat-header img {
       height: 50px;
       width: auto;
     }
+
     #messages {
       flex: 1;
       overflow-y: auto;
@@ -49,41 +52,56 @@
       display: flex;
       flex-direction: column;
     }
+
     .message {
-    margin-bottom: 15px;
-    max-width: 90%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    line-height: 1.4;
-    word-wrap: break-word;
-  }
+      margin-bottom: 15px;
+      max-width: 90%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
     .user-message {
       align-self: flex-end;
       background-color: #0d6efd;
       color: white;
       border-bottom-right-radius: 0;
     }
+
     .bot-message {
       align-self: flex-start;
       background-color: #e9ecef;
       color: black;
       border-bottom-left-radius: 0;
     }
+
+    .chat-image {
+      max-width: 100%;
+      max-height: 400px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
     .loading-dots::after {
       content: ".";
       animation: dots 1s steps(3, end) infinite;
     }
+
     @keyframes dots {
       0% { content: "."; }
       33% { content: ".."; }
       66% { content: "..."; }
       100% { content: "."; }
     }
+
     #input-container {
       display: flex;
       padding: 10px;
       border-top: 1px solid #ddd;
     }
+
     #user-input {
       flex: 1;
       padding: 10px;
@@ -91,6 +109,7 @@
       border-radius: 4px;
       border: 1px solid #ccc;
     }
+
     #send-btn {
       padding: 10px 20px;
       margin-left: 10px;
@@ -124,13 +143,23 @@
       const msg = document.createElement("div");
       msg.classList.add("message");
       msg.classList.add(sender === "user" ? "user-message" : "bot-message");
+
       if (isLoading) {
         const span = document.createElement("span");
         span.classList.add("loading-dots");
         msg.appendChild(span);
       } else {
-        msg.textContent = text;
+        // Check if it's an image (base64 PNG)
+        if (text.startsWith("data:image/png;base64")) {
+          const img = document.createElement("img");
+          img.src = text;
+          img.className = "chat-image";
+          msg.appendChild(img);
+        } else {
+          msg.textContent = text;
+        }
       }
+
       messages.appendChild(msg);
       messages.scrollTop = messages.scrollHeight;
       return msg;
@@ -152,7 +181,14 @@
 
       const data = await response.json();
       messages.removeChild(loadingMsg);
-      appendMessage("bot", data.response);
+
+      // Si image présente
+      if (data.image) {
+        appendMessage("bot", data.image);
+      }
+      if (data.response) {
+        appendMessage("bot", data.response);
+      }
     });
 
     userInput.addEventListener("keypress", (e) => {

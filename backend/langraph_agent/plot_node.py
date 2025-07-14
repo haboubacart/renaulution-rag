@@ -1,4 +1,4 @@
-from utils import GraphState
+from backend.langraph_agent.utils import GraphState
 import matplotlib.pyplot as plt
 import pandas as pd
 import io
@@ -53,7 +53,7 @@ def plot_node(state: GraphState) -> GraphState:
     df = df.sort_index()
 
     # Tracé
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(6.5, 3.7))
     for col in df.columns:
         plt.plot(df.index, df[col], label=col)
 
