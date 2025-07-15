@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-
 from backend.langraph_agent.retriever import load_hybrid_retriever
 from backend.langraph_agent.agent import build_langgraph_agent
 import os
@@ -58,5 +57,5 @@ def ask():
     })
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=8000)
     

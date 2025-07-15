@@ -7,24 +7,30 @@ from backend.langraph_agent.utils import GraphState
 
 def build_rag_chain(retriever, llm):
     prompt = PromptTemplate(
-        template="""
-        Tu es un expert sur l'entreprise Renault. 
-        Tu dois repondre à la question de l'utilisateur à partir du contexte fournir ci-dessous.
-        Utilise uniquement les éléments de contexte suivants pour répondre à la question.
-        Si tu ne retrouve pas la réponse, reponds simplement que tu ne connais pas la réponse. Soit simple, professionnel et chalereux.
-        Reponds dans la langue de la question posée
-        \n
-        Instructions à respecter : \n
-        {instruction}
-        \n
-        ---
-        Contexte: {context}
-        Question: {question}
-        Réponse :
-        ---
-        """,
-        input_variables=["context", "question", "instruction"]
-    )
+    template="""
+    You are an expert on the Renault company.
+    You must answer the user's question using only the context provided below.
+    Use exclusively the information from the context to formulate your answer.
+    If the answer cannot be found in the context, say so clearly.
+    Be simple, clear, and professional.
+    Answer in the same language as the question.
+    ---- IMPORTANT ----
+    If the question is in English, answer in English.
+    If the question is in French, answer in French.
+    ----
+
+    Follow these instructions carefully:
+    {instruction}
+
+    ---
+    Context: {context}
+    Question: {question}
+    Answer:
+    ---
+    """,
+    input_variables=["context", "question", "instruction"]
+)
+
 
     llm_chain = LLMChain(llm=llm, prompt=prompt)
     stuff_chain = StuffDocumentsChain(
@@ -42,26 +48,26 @@ def rag_node_factory(retriever, stuff_chain):
         route = state.get("route", "rag_only")
         print(f"Current route: {route}")
 
-        if route == "graph_flow_sales":
+        if route == "graph_flow_internal":
             instruction = (
-                "Extrait uniquement les chiffres de vente par année (ou par période) depuis 2020. "
-                "Formate les résultats en json, par exemple : {'yyyy' : 'vente1', 'yyyy2' : 'vente2'} etc..."
-                "repond juste avec les données sans rien ajouter, ni de balise de code, juste le json"
+                "Extract only the sales figures by year (or by period) since the year mentionned. "
+                "Format the results as JSON, for example: {'yyyy1': 'sales1', 'yyyy2': 'sales2'}, etc. "
+                "Respond with the Json data only — no explanations, no extra text, no code block — just raw JSON."
             )
-        elif route == "graph_flow_finance":
+        elif route == "graph_flow_stock":
             instruction = (
-                "Prépare une réponse qui extrait à la fois les chiffres de vente et les dates clés "
-                "comme les annonces de résultats. Formate sous la forme : {'yyyy1-01-01' : 'vente1', 'yyyy2-01-01' : 'vente2'} etc..."
-                "repond juste avec les données sans rien ajouter, ni de balise de code, juste le json"
+                "Prepare a response that extracts figures which can later be used to retrieve stock market data, "
+                "such as earnings announcement dates and similar information. "
+                "Respond with the data only — no explanations, no extra text, no code block."
             )
         elif route == "finance_only":
             instruction = (
-                "Fournis uniquement les dates d'annonce des résultats ou les périodes précises nécessaires à l'analyse boursière."
+                "Only provide the requested dates or specific time periods relevant for stock analysis."
             )
         else:
             instruction = (
-                "Fournis une réponse directe et claire à la question en utilisant uniquement le contexte fourni."
-                "Creuse dans le contexte et extrait le maxuimum de passage relatif à la faition et construis une reponse"
+                "Provide a direct and clear answer to the user's question using only the given context. "
+                "Dig into the context to extract as much relevant content as possible and build a concise answer."
             )
 
         docs = retriever.get_relevant_documents(query)

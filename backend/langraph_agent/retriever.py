@@ -45,7 +45,7 @@ def create_lexical_retriever(documents: list[Document], k: int = 1):
     return bm25
 
 # Créer un retriever hybride
-def create_hybrid_retriever(semantic_retriever, lexical_retriever, weights: list = [0.8, 0.2]):
+def create_hybrid_retriever(semantic_retriever, lexical_retriever, weights: list = [0.7, 0.3]):
     return EnsembleRetriever(
         retrievers=[semantic_retriever, lexical_retriever],
         weights=weights
@@ -56,7 +56,7 @@ def load_hybrid_retriever(
     index_path: str,
     pickle_path: str,
     model_path: str,
-    k_semantic: int = 5,
+    k_semantic: int = 7,
     k_lexical: int = 3,
     weights: list = [0.7, 0.3]
 ):
@@ -67,8 +67,5 @@ def load_hybrid_retriever(
     documents = load_documents(pickle_path)
     lexical_retriever = create_lexical_retriever(documents, k=k_lexical)
 
-    #return create_hybrid_retriever(semantic_retriever, lexical_retriever, weights)
-
-    return semantic_retriever
-
+    return create_hybrid_retriever(semantic_retriever, lexical_retriever, weights)
 

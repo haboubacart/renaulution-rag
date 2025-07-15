@@ -1,5 +1,6 @@
 from backend.langraph_agent.utils import GraphState
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 import io
 import base64
@@ -21,20 +22,18 @@ def plot_node(state: GraphState) -> GraphState:
         try:
             if isinstance(rag_result, str):
                 try:
-                    # Essayons d'abord de parser en JSON pur
                     parsed = json.loads(rag_result)
                 except json.JSONDecodeError:
-                    # Si échec, tentons une conversion via ast.literal_eval
                     parsed = ast.literal_eval(rag_result)
             else:
-                parsed = rag_result  # déjà un dict
+                parsed = rag_result
 
             if isinstance(parsed, dict):
                 data = {}
                 for year, value_str in parsed.items():
                     try:
                         value = float(value_str.replace(",", "").replace(" ", ""))
-                        date = f"{year}-01-01"
+                        date = year
                         data[date] = value
                     except Exception as e:
                         print(f"Erreur de parsing valeur '{value_str}' pour {year} : {e}")
@@ -62,6 +61,10 @@ def plot_node(state: GraphState) -> GraphState:
     plt.ylabel("Valeur")
     plt.legend()
     plt.grid(True)
+
+    # Affichage des années uniquement
+    plt.gca().xaxis.set_major_locator(mdates.YearLocator())
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
 
     buffer = io.BytesIO()
     plt.savefig(buffer, format="png")

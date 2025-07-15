@@ -54,6 +54,7 @@ Dans cette première version, j'ai fait le choix d'implémentation de l'architec
 
 Parmi les points à couvrir identifiés : 
 - Ajouter une gestion de la mémoire de chat
+- Optimiser le prompt du RAG
 - Mieux structurer la réponse graphique générée
 - Ajouter les sources utilisées dans la réponse fournie
 - Affiner le retriever et tester un modèle de reranking

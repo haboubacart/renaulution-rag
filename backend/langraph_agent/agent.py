@@ -7,10 +7,6 @@ from langgraph.graph import StateGraph
 from langchain_core.messages import HumanMessage
 
 
-
-
-
-
 def response_node(state: GraphState) -> GraphState:
     if state.get("graph_base64"):
         final_response = f"Here is the genarated graph"
