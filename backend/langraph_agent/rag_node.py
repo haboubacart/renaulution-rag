@@ -8,10 +8,11 @@ from backend.langraph_agent.utils import GraphState
 def build_rag_chain(retriever, llm):
     prompt = PromptTemplate(
         template="""
-        Tu es un expert sur l'entreprise Renault.
+        Tu es un expert sur l'entreprise Renault. 
         Tu dois repondre à la question de l'utilisateur à partir du contexte fournir ci-dessous.
         Utilise uniquement les éléments de contexte suivants pour répondre à la question.
         Si tu ne retrouve pas la réponse, reponds simplement que tu ne connais pas la réponse. Soit simple, professionnel et chalereux.
+        Reponds dans la langue de la question posée
         \n
         Instructions à respecter : \n
         {instruction}

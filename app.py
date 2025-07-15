@@ -22,20 +22,20 @@ print("Strating......")
 retriever = load_hybrid_retriever(
     index_path="./vectorstore/faiss_vectorestore",
     pickle_path="./vectorstore/documents.pkl",
-    model_path="./bge-m3"
+    model_path="./models/bge-m3"
 )
 
 # LLM
-llm = ChatOpenAI(
+"""llm = ChatOpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
     model="gpt-4o",
     temperature=0.1
-)
-
-"""llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",  
-    temperature=0.1
 )"""
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",  
+    temperature=0.1
+)
 
 # Agent LangGraph
 agent = build_langgraph_agent(retriever, llm)

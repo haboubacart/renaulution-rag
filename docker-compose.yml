@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./bge-m3:/app/bge-m3            
+      - ./models/bge-m3:/app/models/bge-m3            
       - ./vectorstore:/app/vectorstore
       - ./frontend:/app/frontend
       - ./backend:/app/backend
